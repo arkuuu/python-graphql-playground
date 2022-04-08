@@ -4,6 +4,7 @@ from ariadne.asgi import GraphQL
 type_defs = gql("""
     type Query {
         hello: String!
+        greeting(name: String!): String!
     }
 """)
 
@@ -16,6 +17,10 @@ def resolve_hello(_, info):
     request = info.context["request"]
     user_agent = request.headers.get("user-agent", "guest")
     return "Hello, %s!" % user_agent
+
+@query.field("greeting")
+def resolve_greeting(*_, name):
+  return "Hello, %s!" % name
 
 schema = make_executable_schema(type_defs, query)
 app = GraphQL(schema, debug=True)
