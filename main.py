@@ -13,14 +13,14 @@ query = QueryType()
 
 # ...and assign our resolver function to its "hello" field.
 @query.field("hello")
-def resolve_hello(_, info):
+def resolve_hello(_, info) -> str:
     request = info.context["request"]
     user_agent = request.headers.get("user-agent", "guest")
-    return "Hello, %s!" % user_agent
+    return f"Hello, {user_agent}!"
 
 @query.field("greeting")
-def resolve_greeting(*_, name):
-  return "Hello, %s!" % name
+def resolve_greeting(*_, name: str) -> str:
+    return f"Greetings, {name}!"
 
 schema = make_executable_schema(type_defs, query)
 app = GraphQL(schema, debug=True)
